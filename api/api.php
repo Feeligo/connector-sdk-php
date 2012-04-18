@@ -75,6 +75,6 @@ abstract class FeeligoApi {
   /**
    * accessor for the Community adapter
    */
-  public function community();
+  public abstract function community();
     
 }
