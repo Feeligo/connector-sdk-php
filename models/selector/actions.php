@@ -11,13 +11,13 @@
 
 /**
  * @category   Feeligo
- * @package    FeeligoAdapterUsers
+ * @package    FeeligoSelectorActions
  * @copyright  Copyright 2012 Feeligo
  * @license    
  */
 
-require_once(str_replace('//','/',dirname(__FILE__).'/').'entity/selector.php'); 
+require_once(str_replace('//','/',dirname(__FILE__).'/').'../entity/selector.php'); 
  
-interface FeeligoActions implements FeeligoEntitySelector {
+interface FeeligoSelectorActions implements FeeligoEntitySelector {
     
 }

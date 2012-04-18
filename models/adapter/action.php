@@ -11,25 +11,27 @@
 
 /**
  * @category   Feeligo
- * @package    FeeligoUser
+ * @package    FeeligoAdapterAction
  * @copyright  Copyright 2012 Feeligo
  * @license    
  */
 
-require_once(str_replace('//','/',dirname(__FILE__).'/').'entity/element.php');
+require_once(str_replace('//','/',dirname(__FILE__).'/').'../entity/element.php');
  
-abstract class FeeligoUser extends FeeligoEntityElement {
+abstract class FeeligoAdapterAction extends FeeligoEntityElement {
   
   public function __construct($id) {
-    parent::__construct('user', $id);
+    parent::__construct('action', $id);
   }
   
+  /*
   public abstract function name();
   public abstract function username();
   public abstract function link();
 
   public abstract function picture_url();  
   public abstract function friends();
+  */
 
   public function as_json() {
     return array_merge(parent::as_json(), array(
