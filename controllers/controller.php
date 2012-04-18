@@ -117,8 +117,8 @@ class FeeligoController {
     
     if ($controller == 'search') {
       
-      if (!($query = $this->param('q'))) { $this->_error('query', 'missing'); return $this->_fail(); }
-      if (!($type = $this->param('t'))) { $this->_error('type', 'missing'); return $this->_fail(); }  
+      if (!($query = $this->param('q'))) { $this->response()->error('query', "missing")->fail_bad_request(); }
+      if (!($type = $this->param('t'))) { $this->response()->error('type', "missing")->fail_bad_request(); }  
         
       if ($type == 'user') {
         $data = $this->community()->users()->search($query, $this->pagination_limit, $this->pagination_offset);
