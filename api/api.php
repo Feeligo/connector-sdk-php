@@ -2,7 +2,7 @@
 /**
  * Feeligo
  *
- * @category   Feeligo Common
+ * @category   Feeligo Common 
  * @package    Feeligo_Common
  * @copyright  Copyright 2012 Feeligo
  * @license    
