@@ -49,7 +49,7 @@ class FeeligoEntityElementCollection extends FeeligoEntityCollection {
     return null;
   }
   
-  public function delete ($el_or_id) {
+  public function delete($el_or_id) {
     $i = $this->index_of($el_or_id);
     if ($i !== null) {
       unset($this->_elements[$i]);
@@ -58,7 +58,7 @@ class FeeligoEntityElementCollection extends FeeligoEntityCollection {
     return false;
   }
   
-  public function contains ($el_or_id) {
+  public function contains($el_or_id) {
     return $this->index_of($el_or_id) !== null;
   }
     

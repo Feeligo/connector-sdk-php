@@ -29,12 +29,9 @@ class FeeligoEntityCollection extends FeeligoEntity {
     $this->_elements = array();
   }
   
-  public function all() {
+  public function all($limit = null, $offset = 0) {
+    if ($limit !== null) return array_slice($this->_elements($offset, $limit));
     return $this->_elements;
-  }
-  
-  public function slice($offset, $limit) {
-    return array_slice($this->_elements($offset, $limit));
   }
   
   public function add($el) {
