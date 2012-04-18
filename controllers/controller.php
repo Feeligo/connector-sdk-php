@@ -131,13 +131,14 @@ class FeeligoController {
         try {
           $data = $this->community()->users()->find($this->url(1));
           if ($this->url(2) == 'friends') {
-            $data = $data->friends();
+            $data = $data->selector_friends();
             if ($this->url(3) !== null) {
               $data = $data->find($this->url(3));
               if ($this->url(4) !== null) {
                 return $this->response()->error('path', $this->url()." is not a valid path")->fail_bad_request();
               }
             }else{
+              $data = $data->all($this->pagination_limit, $this->pagination_offset);
               $this->_can_paginate = true;
             }
           }

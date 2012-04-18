@@ -34,7 +34,8 @@ abstract class FeeligoAdapterUser extends FeeligoEntityElement {
   public abstract function link();
 
   public abstract function picture_url();  
-  public abstract function friends();
+  
+  public abstract function selector_friends();
 
   public function as_json() {
     return array_merge(parent::as_json(), array(
