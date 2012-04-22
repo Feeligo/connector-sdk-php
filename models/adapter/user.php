@@ -42,6 +42,7 @@ abstract class FeeligoAdapterUser extends FeeligoEntityElement {
       'name' => $this->name(),
       'username' => $this->username(),
       'link' => $this->link(),
+      'picture' => $this->picture_url()
     ));
   }
 }
