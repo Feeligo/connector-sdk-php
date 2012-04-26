@@ -35,7 +35,7 @@ class FeeligoEntityElement extends FeeligoEntity {
   
   public function as_json() {
     return array(
-      'id' => $this->id(),
+      'id' => $this->id() . '', // important! we want all our ID's to be strings
       'type' => $this->type()
     );
   }
