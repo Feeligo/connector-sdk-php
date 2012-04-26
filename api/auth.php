@@ -18,7 +18,7 @@
  
 require_once(str_replace('//','/',dirname(__FILE__).'/').'auth/token.php'); 
 
-class FeeligoControllerAuth {
+class FeeligoApiAuth {
   
   public function __construct ($api) {
     $this->_api = $api;
@@ -37,7 +37,7 @@ class FeeligoControllerAuth {
     return $this->api()->community_secret();
   }
   
-  protected function time() {
+  public function time() {
     return $this->_time;
   }
   
@@ -54,9 +54,9 @@ class FeeligoControllerAuth {
    * - permissions can be added
    * - basic permissions are added by default
    */
-  public function get_community_api_user_token($user_id, $permissions = array()) {
+  public function community_api_user_token($adapter_user, $permissions = array()) {
     $permissions = array_merge($permissions, array('see_self'));
-    return $this->_community_api_user_token($user_id, $permissions);
+    return $this->_community_api_user_token($adapter_user->id(), $permissions);
   }
   
   private function _community_api_user_token($user_id, $permissions) {

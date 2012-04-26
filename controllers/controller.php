@@ -18,16 +18,12 @@
 
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../helpers/url.php');
 require_once(str_replace('//','/',dirname(__FILE__).'/').'response.php');
-require_once(str_replace('//','/',dirname(__FILE__).'/').'auth.php');
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../models/resource/factory.php');
  
 class FeeligoController {
 
   public function __construct(FeeligoApi $api) {
     $this->_api = $api;
-    
-    // authentication
-    $this->_auth = new FeeligoControllerAuth($api);
     
     // URL helper
     $this->_url_helper = new FeeligoHelperUrl();
@@ -39,10 +35,17 @@ class FeeligoController {
   }
   
   /**
+   * Accessor for API object
+   */
+  public function api() {
+    return $this->_api;
+  }
+  
+  /**
    * Accessor for the authentication object
    */
   public function auth() {
-    return $this->_auth;
+    return $this->api()->auth();
   }
   
   /**

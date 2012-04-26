@@ -15,12 +15,21 @@
  * @copyright  Copyright 2012 Feeligo
  * @license    
  */
+ 
+require_once(str_replace('//','/',dirname(__FILE__).'/').'api/auth.php'); 
 
 abstract class FeeligoApi {
   
   const __community_api_key = FLG__community_api_key;
   const __community_secret = FLG__community_secret;
   const __remote_server_url = FLG__server_url;
+  
+  /**
+   * Accessor for Auth object
+   */
+  public function auth() {
+    return $this->_auth;
+  }
   
   /**
    * Accessors for Feeligo params
@@ -70,7 +79,9 @@ abstract class FeeligoApi {
   /**
    * protected constructor prevents instantiation from outside
    */
-  protected function __construct() {}
+  protected function __construct() {
+    $this->_auth = new FeeligoApiAuth($this);
+  }
   
   /**
    * accessor for the Community adapter
