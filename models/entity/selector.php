@@ -24,7 +24,7 @@ require_once(str_replace('//','/',dirname(__FILE__).'/').'not_found_exception.ph
  
 interface FeeligoEntitySelector {
  
-  public function all($limit, $offset);
+  public function all($limit = null, $offset = 0);
  
   public function find($id);
  
