@@ -149,7 +149,18 @@ class FeeligoController {
     // which type
     $controller = $this->url(0);
     
-    if ($controller == 'search') {
+    if ($controller == 'info') {
+      // path: info/
+      $this->_request_permission($token, 'community_info');
+      
+      $this->response()->set_data(array(
+        'time' => time(),
+        'phpversion' => phpversion()
+      ));
+      
+      return;
+      
+    }elseif ($controller == 'search') {
       // path: search/  :  search
       if (!($type = $this->param('t'))) { $this->_fail_bad_request('type', "missing"); }  
         
@@ -289,6 +300,17 @@ class FeeligoController {
       } 
     }
     return $data;
+  }
+  
+  /**
+   * make sure that the token has a certain permission, or raise an error
+   */
+  private function _request_permission($token, $permission, $throw = true) {
+    if (!$token->has_permission($permission)) {
+      if ($throw) $this->_fail_unauthorized('permission', "$permission needed");
+      return false;
+    }
+    return true;
   }
   
   /**
