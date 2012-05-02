@@ -61,7 +61,7 @@ class FeeligoControllerAuthToken {
   }
   
   public function permissions() {
-    return $this->_field('permissions', array());
+    return $this->field('permissions', array());
   }
   
   public function has_permission($permission) {
