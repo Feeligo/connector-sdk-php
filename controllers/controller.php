@@ -302,6 +302,7 @@ class FeeligoController {
     return $data;
   }
   
+  
   /**
    * make sure that the token has a certain permission, or raise an error
    */
@@ -312,6 +313,7 @@ class FeeligoController {
     }
     return true;
   }
+  
   
   /**
    * convenience methods to throw controller exceptions

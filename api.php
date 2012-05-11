@@ -54,26 +54,17 @@ abstract class FeeligoApi {
    * @var FeeligoApi
    */
   protected static $_instance;
-  
-  /**
-   * Get or create the current api instance
-   * 
-   * @return FeeligoApi
-   */
-  public static function getInstance() {
-    if( is_null(self::$_instance) ) {
-      self::$_instance = new self();
-    }
-    return self::$_instance;
-  }
 
   /**
-   * Shorthand for getInstance
+   * Get or create the current api instance
    *
    * @return FeeligoApi
    */
   public static function _() {
-    return self::getInstance();
+    if( is_null(self::$_instance) ) {
+      self::$_instance = new self();
+    }
+    return self::$_instance;
   }
   
   /**
@@ -87,5 +78,25 @@ abstract class FeeligoApi {
    * accessor for the Community adapter
    */
   public abstract function community();
+  
+  /**
+   * tells whether the viewer and subject are defined
+   */
+  public abstract function has_viewer();
+  public abstract function has_subject();
+  
+  /**
+   * accessor for the Viewer user
+   */
+  public function viewer() {
+    return $this->community()->viewer();
+  }
+  
+  /**
+   * accessor for the Subject user adapter
+   */
+  public function subject() {
+    return $this->community()->subject();
+  }
     
 }

@@ -24,6 +24,10 @@ abstract class FeeligoCommunity extends FeeligoEntityElement {
     parent::__construct('community', '/');
   }
   
+  public abstract function viewer();
+  
+  public abstract function subject();
+  
   public abstract function users();
   
   public abstract function actions();
