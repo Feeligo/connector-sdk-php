@@ -1,5 +1,17 @@
 # Feeligo SDK for PHP-based social websites
 
+## Key concepts
+
+  * a *Community* is any kind of social website. By _social_ we mean that there is a notion of uniquely-identifiable **Users** *and* of a pairwise Relationship (e.g. Friendship) between Users. That's all we really need.
+  
+  * at any given time, the logged-in User on a Community is called the *Viewer*. A Viewer corresponds to a single user account that is being used by someone to navigate on the Community.
+  
+  _On publicly-accessible pages, there may be no defined Viewer because they can be accessed without logged-in._
+  
+  * when the *Viewer* is viewing the *profile page* of another User, this User is called the *Subject*.
+  
+  _Note that on some social networking platforms, the concept of "subject" is extended to anything that the Viewer is viewing (such as an Event, a Forum Post, a Message...). For us, the Subject is **always** another User._
+
 ## How to adapt the PHP SDK to a given platform
 
 The following assumptions are made:
@@ -140,6 +152,7 @@ In `modules/feeligo/apps/giftbar.php`
       
       /* accessor for the API singleton instance */
       public function api() {
+        // TODO: make sure to call the ::_() method of your Feeligo###Api class
         return FeeligoRiriApi::_();
       }
       
@@ -167,28 +180,35 @@ This heavily depends on your platform's implementation. What we want to achieve 
     <head>
       [...]
   
-      <!-- links for the Giftbar's CSS -->
-      <link href="<?php echo $giftbar->app_stylesheet_url();?>" media="screen" rel="stylesheet" type="text/css" />
-      <!--[if lt IE 7]> 
-        <link href="<?php echo $giftbar->app_stylesheet_url('ie7');?>" media="screen" rel="stylesheet" type="text/css" />
-      <![endif]-->
+      <?php if($giftbar->should_be_displayed()): ?>
+        <!-- links for the Giftbar's CSS -->
+        <link href="<?php echo $giftbar->app_stylesheet_url();?>" media="screen" rel="stylesheet" type="text/css" />
+        <!--[if lt IE 7]> 
+          <link href="<?php echo $giftbar->app_stylesheet_url('ie7');?>" media="screen" rel="stylesheet" type="text/css" />
+        <![endif]-->
   
-      <!-- JS code for the Giftbar -->
-      <script type="text/javascript"><?php echo $giftbar->startup_js_code(); ?></script>
+        <!-- JS code for the Giftbar -->
+        <script type="text/javascript">
+          <?php echo $giftbar->startup_js_code(); ?>
+        </script>
+      <?php endif; ?>
     </head>
 
     <body>
       [...]
   
-      <!-- tag which loads the Giftbar's remote JS file -->
-      <script type="text/javascript" src="<?php echo $giftbar->app_loader_js_url();?>"></script>
-      <!-- div where the Giftbar's HTML will be inserted -->
-      <div id="flg_giftbar_container" class="flg"></div>
+      <?php if($giftbar->should_be_displayed()): ?>
+        <!-- tag which loads the Giftbar's remote JS file -->
+        <script type="text/javascript" src="<?php echo $giftbar->app_loader_js_url();?>"></script>
+        <!-- div where the Giftbar's HTML will be inserted -->
+        <div id="flg_giftbar_container" class="flg"></div>
+      <?php endif; ?>
     </body>
 
+It is recommended to keep the `<script>` tag pointing to the `app_loader_js_url` as close to the end of the `<body>` as possible. This ensures that the Giftbar's JS loading is non-blocking and will not begin until the HTML and CSS are fully loaded.
 
 
-### 5. Adapt the `Users` class
+### 6. Adapt the `Users` class
 
-### 6. Adapt the `UserFriends` class
+### 7. Adapt the `UserFriends` class
 
