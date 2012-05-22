@@ -18,6 +18,8 @@
 
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../entity/selector.php'); 
  
-interface FeeligoSelectorActions implements FeeligoEntitySelector {
+interface FeeligoSelectorActions extends FeeligoEntitySelector {
+  
+  public function create($data);
     
 }

@@ -32,7 +32,6 @@ abstract class FeeligoCommunity extends FeeligoEntityElement {
   
   public abstract function actions();
 
-  
   public function as_json () {
     return array(
       'url' => $this->url,

@@ -20,9 +20,12 @@ require_once(str_replace('//','/',dirname(__FILE__).'/').'../entity/selector.php
  
 interface FeeligoSelectorUsers extends FeeligoEntitySelector {
     
+  public function all($limit = null, $offset = 0);
+ 
+  public function find($id);
+ 
+  public function find_all($ids);  
+    
   public function search($query, $limit = null, $offset = 0);
-  
-  /** To be implemented
-  */
     
 }

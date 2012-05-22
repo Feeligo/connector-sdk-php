@@ -151,7 +151,7 @@ class FeeligoController {
     
     if ($controller == 'info') {
       // path: info/
-      $this->_request_permission($token, 'community_info');
+      $this->_require_permission($token, 'community_info');
       
       $this->response()->set_data(array(
         'time' => time(),
@@ -226,11 +226,17 @@ class FeeligoController {
       }
     }elseif ($controller == 'actions') {
       // only allow POST
-      if ($this->request()->is_post()) {
-        $this->_fail_bad_request('actions', 'is not a valid path'); // scheduled for next release
+      $this->_require_method('POST');
+      
+      if (($payload = $token->payload()) !== null && is_array($payload)) {
+        $data = $this->community()->actions()->create($payload);
+        if ($data === null) {
+          $this->_fail_bad_request('action', 'could not be saved');
+        }
       }else{
-        $this->_fail_method_not_allowed('method', 'not allowed');
+        $this->_fail_bad_request('payload', 'missing');
       }
+      
     }else{
       $this->_fail_bad_request('path', $this->url()." is not a valid path");
     }
@@ -306,9 +312,20 @@ class FeeligoController {
   /**
    * make sure that the token has a certain permission, or raise an error
    */
-  private function _request_permission($token, $permission, $throw = true) {
+  private function _require_permission($token, $permission, $throw = true) {
     if (!$token->has_permission($permission)) {
       if ($throw) $this->_fail_unauthorized('permission', "$permission needed");
+      return false;
+    }
+    return true;
+  }
+  
+  /**
+   * make sure the request has a specific method
+   */
+  private function _require_method($method, $throw = true) {
+    if (!$this->request()->method_is($method)) {
+      if ($throw) $this->_fail_method_not_allowed($method.' method', 'not allowed');
       return false;
     }
     return true;
