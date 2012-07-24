@@ -44,22 +44,26 @@ class FeeligoControllerRequest extends Feeligo_Zend_Controller_Request_Http {
    */ 
   public function method() {
     return strtoupper($this->param('method', parent::getMethod()));
+  }
+  
+  public function method_is($method) {
+    return $this->method() == strtoupper($method);
   } 
   
   public function is_get() {
-    return $this->method() == 'GET';
+    return $this->method_is('GET');
   }
   
   public function is_post() {
-    return $this->method() == 'POST';
+    return $this->method_is('POST');
   }
   
   public function is_put() {
-    return $this->method() == 'PUT';
+    return $this->method_is('PUT');
   }
   
   public function is_delete() {
-    return $this->method() == "DELETE";
+    return $this->method_is("DELETE");
   }
   
   /**
