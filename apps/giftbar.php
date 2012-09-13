@@ -2,8 +2,8 @@
 /**
  * Feeligo
  *
- * @category   Feeligo Common 
- * @package    Feeligo_Common
+ * @category   Feeligo 
+ * @package    API Connector SDK for PHP
  * @copyright  Copyright 2012 Feeligo
  * @license    
  * @author     Davide Bonapersona <tech@feeligo.com>
@@ -15,14 +15,28 @@
  * @copyright  Copyright 2012 Feeligo
  * @license    
  */
+ 
+require_once(str_replace('//','/',dirname(__FILE__).'/').'../lib/api/api.php'); 
 
-abstract class FeeligoAppGiftbar {
+class FeeligoGiftbarApp {
   
-  /* returns the API singleton instance
-   * this must be overridden to call the ::_() method
-   * of the appropriate API class
+  /**
+   * constructor
+   *
+   * @param FeeligoApi $api your own implementation of the FeeligoApi class
    */
-  public abstract function api();
+  function __construct(FeeligoApi $api) {
+    $this->_api = $api;
+  }
+  
+  /**
+   * accessor for the FeeligoApi instance
+   *
+   * @return FeeligoApi
+   */
+  function api() {
+    return $this->_api;
+  }
  
   /**
    * URL of the CSS stylesheet
@@ -36,7 +50,7 @@ abstract class FeeligoAppGiftbar {
   }
   
   /**
-   * URL of the JS file which loads the Gift Bar
+   * URL of the JS file which loads the GiftBar
    *
    * the <script> tag referencing this file should be placed close to the bottom of the page,
    * (and not in the <head>) so that it does not block page load
@@ -56,10 +70,7 @@ abstract class FeeligoAppGiftbar {
   
   
   /**
-   * Tells whether the Gift Bar should be displayed based on current context
-   *
-   * on SocialEngine we check if the viewer has an Identity which is not null and > 0
-   * (meaning that the user exists)
+   * Tells whether the GiftBar should be displayed based on current context
    *
    * @return bool
    */
@@ -68,7 +79,7 @@ abstract class FeeligoAppGiftbar {
   }
   
   /**
-   * Sets some JS variables that the Gift Bar expects to find in order to run
+   * Sets some JS variables that the GiftBar expects to find in order to run
    * - context : the viewer and the subject
    * - auth : the tokens used to authenticate requests to the Feeligo API
    *
