@@ -21,7 +21,7 @@ require_once(str_replace('//','/',dirname(__FILE__).'/').'api/auth.php');
 abstract class FeeligoApi {
   
   const __community_api_key = FLG__community_api_key;
-  const __community_secret = FLG__community_secret;
+  const __community_secret  = FLG__community_secret;
   const __remote_server_url = FLG__server_url;
   
   /**

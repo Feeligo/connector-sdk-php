@@ -16,7 +16,8 @@
  * @license    
  */
  
-require_once(str_replace('//','/',dirname(__FILE__).'/').'../lib/api/api.php'); 
+require_once(str_replace('//','/',dirname(__FILE__).'/').'../lib/api.php');
+require_once(str_replace('//','/',dirname(__FILE__).'/').'../lib/presenters/factory.php');
 
 class FeeligoGiftbarApp {
   
@@ -45,8 +46,8 @@ class FeeligoGiftbarApp {
    *
    * @return string
    */
-  public function app_stylesheet_url($version = null) {
-    return $this->_app_file_url('giftbar'.(!!$version ? '-'.$version : '').'.css');
+  public function css_url($version = null) {
+    return $this->_remote_app_file_url('giftbar'.(!!$version ? '-'.$version : '').'.css');
   }
   
   /**
@@ -57,15 +58,15 @@ class FeeligoGiftbarApp {
    *
    * @return string
    */
-  public function app_loader_js_url() {
-    return $this->_app_file_url('giftbar-loader-'.$this->api()->viewer()->id().'.js');
+  public function loader_js_url() {
+    return $this->_remote_app_file_url('giftbar-loader-'.$this->api()->viewer()->id().'.js');
   }
   
   /**
    * Helper function which builds URL's of Feeligo app files
    */
-  protected function _app_file_url($app_file_path) {
-    return $this->api()->remote_server_url()."c/".$this->api()->community_api_key()."/apps/".$app_file_path;
+  protected function _remote_app_file_url($path) {
+    return $this->api()->remote_server_url()."c/".$this->api()->community_api_key()."/apps/".$path;
   }
   
   
@@ -74,7 +75,7 @@ class FeeligoGiftbarApp {
    *
    * @return bool
    */
-  public function should_be_displayed() {
+  public function is_enabled() {
     return $this->api()->has_viewer();
   }
   
@@ -85,8 +86,12 @@ class FeeligoGiftbarApp {
    *
    * @return string
    */
-  public function startup_js_code() {
-    return '(function(){if(!this.flg){this.flg={};}if(!this.flg.config){this.flg.config={};}if(!this.flg.context){this.flg.context={}};flg.config.api_key="'.$this->api()->community_api_key().'";flg.context='.json_encode($this->context_as_json()).';flg.auth='.json_encode($this->auth_as_json()).'}).call(this);';
+  public function initialization_js() {
+    $js = '(function(){if(!this.flg){this.flg={}}';
+    $js .= 'if(!this.flg.config){this.flg.config={}}flg.config.api_key="'.$this->api()->community_api_key().'";';
+    $js .= 'if(!this.flg.context){this.flg.context={}}flg.context='.json_encode($this->context_as_json()).';';
+    $js .= 'flg.auth='.json_encode($this->auth_as_json()).'}).call(this);';
+    return $js;
   }
   
   /**
@@ -96,8 +101,8 @@ class FeeligoGiftbarApp {
    */
   public function context_as_json() {
     return array(
-      'viewer' => $this->api()->viewer()->as_json(),
-      'subject' => $this->api()->has_subject() ? $this->api()->subject()->as_json() : null,
+      'viewer' => $this->_user_as_json($this->api()->viewer()),
+      'subject' => $this->api()->has_subject() ? $this->_user_as_json($this->api()->subject()) : null,
     );
   }
   
@@ -115,4 +120,13 @@ class FeeligoGiftbarApp {
     );
   }
   
+  /**
+   * Returns a user as JSON-encodable object
+   *
+   * @return Array
+   */
+  protected function _user_as_json($user_adapter) {
+    $presenter = FeeligoPresenterFactory::present($user_adapter);
+    return $presenter->as_json();
+  }
 }
