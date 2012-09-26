@@ -83,33 +83,10 @@ class FeeligoApiAuth {
    * - returns null otherwise
    */
   public function decode_community_api_user_token($token_str) {
+    error_log('DECODING');
     if ($token_str === null || !is_string($token_str)) { return null; }
     // decode token json object
     return FeeligoControllerAuthToken::decode($token_str, $this->secret());
-  }
-  
-  /**
-   * Adds a signature to a $token, preventing any further modification
-   */
-  private function _sign_token(FeeligoControllerAuthToken $token) {
-    if ($token !== null) {
-      $signature = sha1("community-api-user-token:".$this->secret().":".json_encode($token->as_json()).":".$time);
-      return new FeeligoControllerAuthTokenVerified($token->fields(), $signature);
-    }
-    return null;
-  }
-
-  /**
-   * Checks whether the signature of the $token is valid
-   * - ensures that the token has not been modified outside this network after being signed
-   */
-  private function _token_has_valid_signature(FeeligoControllerAuthToken $token) {
-    if ($token !== null && $token->signature() !== null) {
-      // remove signature, try re-signing the token and see if signature matches
-      $test_token = $this->_sign_token(new FeeligoControllerAuthToken($token->fields()));
-      return $test_token->signature() === $token->signature();
-    }
-    return false;
   }
   
 }
