@@ -179,7 +179,8 @@ class FeeligoController {
       
       $this->response()->set_data(array(
         'time' => time(),
-        'phpversion' => phpversion()
+        'phpversion' => phpversion(),
+        'sdkversion' => '2.1'
       ));
       
       return;
