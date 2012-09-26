@@ -83,7 +83,6 @@ class FeeligoApiAuth {
    * - returns null otherwise
    */
   public function decode_community_api_user_token($token_str) {
-    error_log('DECODING');
     if ($token_str === null || !is_string($token_str)) { return null; }
     // decode token json object
     return FeeligoControllerAuthToken::decode($token_str, $this->secret());
