@@ -18,9 +18,6 @@
  
 require_once(str_replace('//','/',dirname(__FILE__).'/').'api/auth.php'); 
 
-// default value for FLG__server_url
-if (!defined('FLG__server_url')) { define('FLG__server_url', "http://feeligo.com/"); }
-
 abstract class FeeligoApi {
   
   const __community_api_key = FLG__community_api_key;
@@ -38,7 +35,7 @@ abstract class FeeligoApi {
   }
 
   public function remote_server_url() {
-    return self::__remote_server_url;
+    return self::__remote_server_url ? self::__remote_server_url : "http://feeligo.com/";
   }
   public function remote_api_endpoint_url() {
     return self::remote_server_url().'c/'.self::community_api_key().'/api/';
