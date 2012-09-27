@@ -118,6 +118,7 @@ class FeeligoControllerAuthToken {
    * into a string where arrays are sorted by value and associative arrays are sorted by key, and concatenated
    */
   protected static function _stringify($object) {
+    if ($object === null) return 'null';
     if (is_array($object)) {
       if (empty($object)) return '[]'; // avoids errors with foreach
       if ((bool)count(array_filter($keys = array_keys($object), 'is_string'))) {
