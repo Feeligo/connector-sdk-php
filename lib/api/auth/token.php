@@ -74,7 +74,7 @@ class FeeligoControllerAuthToken {
   
   public function encode() {
     if ($this->signature() === null) return null;
-    return base64_encode(
+    return self::base64url_encode(
       json_encode(array(
         self::FIELD_DATA => $this->as_json(),
         self::FIELD_AUTH => array(
@@ -85,10 +85,17 @@ class FeeligoControllerAuthToken {
     );
   }
   
+  public static function base64url_encode($data) { 
+    return rtrim(strtr(base64_encode($data), '+/', '-_'), '='); 
+  } 
+
+  public static function base64url_decode($data) { 
+    return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT)); 
+  }  
   
   public static function decode($token_str, $secret) {
     if ($token_str === null) return null;
-    if (($token_json_string = base64_decode($token_str)) !== false) {
+    if (($token_json_string = self::base64url_decode($token_str)) !== false) {
       if (($data = json_decode($token_json_string, true)) !== false) {
         
         // check that the token is signed
@@ -109,7 +116,8 @@ class FeeligoControllerAuthToken {
   
   public static function make($fields, $secret, $time = null) {
     $time = ($time !== null) ? $time : time();
-    $signature = sha1(self::COMMUNITY_API_USER_TOKEN_PREFIX.":".$secret.":".self::_stringify($fields).":".$time);
+    $signature = self::COMMUNITY_API_USER_TOKEN_PREFIX.":".$secret.":".self::_stringify($fields).":".$time;
+    $signature = sha1($signature);
     return new self($fields, $signature, $time);
   }
   
