@@ -127,6 +127,7 @@ class FeeligoGiftbarApp {
    */
   protected function _user_as_json($user_adapter) {
     $presenter = FeeligoPresenterFactory::present($user_adapter);
+    if ($presenter === null) return null;
     return $presenter->as_json();
   }
 }
