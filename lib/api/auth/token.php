@@ -132,14 +132,14 @@ class FeeligoControllerAuthToken {
       if ((bool)count(array_filter($keys = array_keys($object), 'is_string'))) {
         // associative array : sort by keys (as strings)
         ksort($object, SORT_STRING);
-        // join
+        // stringify values and join
         $a = array(); foreach($object as $k => $v) { $a[] = $k.':'.self::stringify($v); }
         return '['.implode(',', $a).']';
       }else{
-        // non associative array : stringify values then sort by value
-        //$a = array(); foreach($object as $v) { $a[] = self::stringify($v); }
+        // non associative array : just stringify values and join
+        $a = array(); foreach($object as $v) { $a[] = self::stringify($v); }
         // join
-        return '['.implode(',', array_map(self::stringify, $a).']';
+        return '['.implode(',', $a).']';
       }
     }
     // other objects: just convert to string
