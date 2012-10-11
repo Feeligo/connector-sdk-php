@@ -116,7 +116,7 @@ class FeeligoControllerAuthToken {
   
   public static function make($fields, $secret, $time = null) {
     $time = ($time !== null) ? $time : time();
-    $signature = self::COMMUNITY_API_USER_TOKEN_PREFIX.":".$secret.":".self::_stringify($fields).":".$time;
+    $signature = self::COMMUNITY_API_USER_TOKEN_PREFIX.":".$secret.":".self::stringify($fields).":".$time;
     $signature = sha1($signature);
     return new self($fields, $signature, $time);
   }
@@ -125,7 +125,7 @@ class FeeligoControllerAuthToken {
    * Converts a json-encodable object (array, associative array, int or string, or combination of them)
    * into a string where arrays are sorted by value and associative arrays are sorted by key, and concatenated
    */
-  protected static function _stringify($object) {
+  public static function stringify($object) {
     if ($object === null) return 'null';
     if (is_array($object)) {
       if (empty($object)) return '[]'; // avoids errors with foreach
@@ -133,14 +133,13 @@ class FeeligoControllerAuthToken {
         // associative array : sort by keys (as strings)
         ksort($object, SORT_STRING);
         // join
-        $a = array(); foreach($object as $k => $v) { $a[] = $k.':'.self::_stringify($v); }
-        return '{'.implode(',', $a).'}';
+        $a = array(); foreach($object as $k => $v) { $a[] = $k.':'.self::stringify($v); }
+        return '['.implode(',', $a).']';
       }else{
         // non associative array : stringify values then sort by value
-        $a = array(); foreach($object as $v) { $a[] = self::_stringify($v); }
-        sort($a, SORT_STRING);
+        //$a = array(); foreach($object as $v) { $a[] = self::stringify($v); }
         // join
-        return '['.implode(',', $a).']';
+        return '['.implode(',', array_map(self::stringify, $a).']';
       }
     }
     // other objects: just convert to string
