@@ -19,6 +19,7 @@
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../helpers/url.php');
 require_once(str_replace('//','/',dirname(__FILE__).'/').'response.php');
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../presenters/factory.php');
+require_once(str_replace('//','/',dirname(__FILE__).'/').'../payloads/processor.php');
 
 /**
  * Exception used to break the controller's execution and set an error message into the response
@@ -180,7 +181,7 @@ class FeeligoController {
       $this->response()->set_data(array(
         'time' => time(),
         'phpversion' => phpversion(),
-        'sdkversion' => '2.1'
+        'sdkversion' => '2.2'
       ));
       
       return;
@@ -261,6 +262,11 @@ class FeeligoController {
       
       // create the action
       if (($payload = $token->payload()) !== null && is_array($payload)) {
+
+        // pre-process the payload
+        $payload = FeeligoPayloadProcessor::process($payload, $this->api());
+
+        // pass the payload to the API to publish the action
         $data = $this->api()->actions()->create($payload);
         if ($data === null) {
           $this->_fail_bad_request('action', 'could not be saved');
