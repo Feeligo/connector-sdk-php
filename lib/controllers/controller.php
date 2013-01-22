@@ -300,11 +300,24 @@ class FeeligoController {
       return $data->search_by_name($query, $this->pagination_limit, $this->pagination_offset);
     }
     elseif ( ($bd = $this->param('bd')) !== null ) {
-      // enable pagination
-      $this->_does_paginate = true;
+      // Quick reg exp to filter correctly formatted dates
+      if( ereg("([0-9]{4})-([0-1]{1}[1-9]{1})-([0-3]{1}[1-9]{1})", $bd) ) {
+        // Now we really test the date for trickier situations
+        list($year, $month, $day) = preg_split('/[-]/', $bd);
+        if ( checkdate(intval($month), intval($day), intval($year)) ) {
+          // enable pagination
+          $this->_does_paginate = true;
      
-      // apply search()
-      return $data->search_by_birth_date($bd, $this->pagination_limit, $this->pagination_offset);
+          // apply search()
+          return $data->search_by_birth_date($bd, $this->pagination_limit, $this->pagination_offset);
+        }
+        else {
+          $this->_fail_bad_request('bd', "this date does not exist you chancer!");
+        }
+      }
+      else {
+        $this->_fail_bad_request('bd', "badly formatted expected yyyy-mm-dd");
+      }
     }
     else {
       $this->_fail_bad_request('search_parameter', "missing"); 
