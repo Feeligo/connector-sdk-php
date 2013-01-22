@@ -290,13 +290,26 @@ class FeeligoController {
   /**
    * calls the search() method on $data, passing query, type and pagination parameters
    */
-  private function _select_search($data, $query = null) {
+  private function _select_search($data) {
     // ensure there is a query, either passed or in the params
-    if ($query === null && ($query = $this->param('q')) === null) { $this->_fail_bad_request('query', "missing"); }
-    // enable pagination
-    $this->_does_paginate = true;
-    // apply search()
-    return $data->search($query, $this->pagination_limit, $this->pagination_offset);
+    if ( ($query = $this->param('q')) !== null ) {
+      // enable pagination
+      $this->_does_paginate = true;
+
+      // apply search()
+      return $data->search_by_name($query, $this->pagination_limit, $this->pagination_offset);
+    }
+    elseif ( ($bd = $this->param('bd')) !== null ) {
+      // enable pagination
+      $this->_does_paginate = true;
+     
+      // apply search()
+      return $data->search_by_birth_date($bd, $this->pagination_limit, $this->pagination_offset);
+    }
+    else {
+      $this->_fail_bad_request('search_parameter', "missing"); 
+    }
+    
   }
   
   /**

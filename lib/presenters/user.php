@@ -36,7 +36,8 @@ class FeeligoUserPresenter extends FeeligoModelPresenter {
     return array_merge(parent::as_json(), array(
       'name' => $this->item()->name(),
       'link' => $this->item()->link(),
-      'picture_url' => $this->item()->picture_url()
+      'picture_url' => $this->item()->picture_url(),
+      'birth_date' => $this->item()->birth_date()
     ));
   }
 }

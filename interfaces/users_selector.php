@@ -53,6 +53,7 @@ interface FeeligoUsersSelector {
     
     
   /**
+   * Deprecated removed in 3.0, please use search_by_name instead
    * returns an array containing all the Users which name matches the query
    *
    * @param string $query the search query, argument to a SQL LIKE '%$query%' clause
@@ -61,5 +62,25 @@ interface FeeligoUsersSelector {
    * @return FeeligoUserAdapter[] array
    */  
   public function search($query, $limit = null, $offset = 0);
-  
+
+  /**
+   * returns an array containing all the Users whose name matches the query
+   *
+   * @param string $query the search query, argument to a SQL LIKE '%$query%' clause
+   * @param int $limit argument for the SQL LIMIT clause
+   * @param int $offset argument for the SQL OFFSET clause
+   * @return FeeligoUserAdapter[] array
+   */
+  public function search_by_name($query, $limit = null, $offset = 0);
+
+  /**
+   * returns an array containing all the Users whose birth date matches the query
+   *
+   * @param string $query the search query, argument to a SQL = '(yyy)y-(m)m-(d)d' clause
+   * @param int $limit argument for the SQL LIMIT clause
+   * @param int $offset argument for the SQL OFFSET clause
+   * @return FeeligoUserAdapter[] array
+   */
+  public function search_by_birth_date($bd, $limit = null, $offset = 0);
+
 }
