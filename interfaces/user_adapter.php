@@ -60,7 +60,7 @@ interface FeeligoUserAdapter {
   public function friends_selector();
 
   /**
-   * the users number of friends
+   * the user's number of friends
    *
    * @return integer
    */
