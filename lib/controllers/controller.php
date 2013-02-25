@@ -299,8 +299,8 @@ class FeeligoController {
   private function _select_search($data, $query = null) {
     // ensure there is a query, either passed or in the params
     if ($query === null &&
-        ($query = $this->param('query') === null ||
-        ($query = $this->param('q')) === null)) {
+        ($query = $this->param('query')) === null &&
+        ($query = $this->param('q')) === null) {
           $this->_fail_bad_request('query', "missing");
     }
     // enable pagination
