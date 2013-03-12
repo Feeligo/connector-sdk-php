@@ -137,7 +137,8 @@ class FeeligoController {
     }
     
     // decode Token from URL
-    $token = $this->auth()->decode_community_api_user_token($this->param('token'));
+    $token_string = $this->param('token');
+    $token = $this->auth()->decode_community_api_user_token($token_string);
     
     // in development env only
     if ($this->url(0) == 'test_token') {
@@ -164,7 +165,11 @@ class FeeligoController {
     
     // authentication
     if ($token === null) {
-      $this->_fail_unauthorized('token', 'invalid');
+      if ($token_string === null || strlen($token_string) == 0) {
+        $this->_fail_unauthorized('token', 'missing or blank token');
+      }else{
+        $this->_fail_unauthorized('token', 'invalid token: '.$token_string);
+      }
     }
     
     // pagination
