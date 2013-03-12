@@ -355,7 +355,10 @@ class FeeligoController {
    */
   private function _require_method($method, $throw = true) {
     if (!$this->request()->method_is($method)) {
-      if ($throw) $this->_fail_method_not_allowed($method.' method', 'not allowed');
+      if ($throw) {
+        $this->_fail_method_not_allowed('method', 
+          'requires '.$method.', got '.$this->request()->method());
+      }
       return false;
     }
     return true;
