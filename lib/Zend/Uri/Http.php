@@ -446,7 +446,7 @@ class Feeligo_Zend_Uri_Http extends Feeligo_Zend_Uri
         if (strlen($host) === 0) {
             return false;
         }
-        
+
         // we skip hostname validation here
         return true;
 

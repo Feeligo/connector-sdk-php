@@ -2,10 +2,10 @@
 /**
  * Feeligo
  *
- * @category   Feeligo 
+ * @category   Feeligo
  * @package    API Connector SDK for PHP
  * @copyright  Copyright 2012 Feeligo
- * @license    
+ * @license
  * @author     Davide Bonapersona <tech@feeligo.com>
  */
 
@@ -13,14 +13,14 @@
  * @category   Feeligo
  * @package    FeeligoAppGiftbar
  * @copyright  Copyright 2012 Feeligo
- * @license    
+ * @license
  */
- 
+
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../lib/api.php');
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../lib/presenters/factory.php');
 
 class FeeligoGiftbarApp {
-  
+
   /**
    * constructor
    *
@@ -29,7 +29,7 @@ class FeeligoGiftbarApp {
   function __construct(FeeligoApi $api) {
     $this->_api = $api;
   }
-  
+
   /**
    * accessor for the FeeligoApi instance
    *
@@ -38,7 +38,7 @@ class FeeligoGiftbarApp {
   function api() {
     return $this->_api;
   }
- 
+
   /**
    * URL of the CSS stylesheet
    *
@@ -49,7 +49,7 @@ class FeeligoGiftbarApp {
   public function css_url($version = null) {
     return $this->_remote_app_file_url('giftbar'.(!!$version ? '-'.$version : '').'.css');
   }
-  
+
   /**
    * URL of the JS file which loads the GiftBar
    *
@@ -61,15 +61,15 @@ class FeeligoGiftbarApp {
   public function loader_js_url() {
     return $this->_remote_app_file_url('giftbar-loader-'.$this->api()->viewer()->id().'.js');
   }
-  
+
   /**
    * Helper function which builds URL's of Feeligo app files
    */
   protected function _remote_app_file_url($path) {
     return $this->api()->remote_server_url()."c/".$this->api()->community_api_key()."/apps/".$path;
   }
-  
-  
+
+
   /**
    * Tells whether the GiftBar should be displayed based on current context
    *
@@ -78,7 +78,7 @@ class FeeligoGiftbarApp {
   public function is_enabled() {
     return $this->api()->has_viewer();
   }
-  
+
   /**
    * Sets some JS variables that the GiftBar expects to find in order to run
    * - context : the viewer and the subject
@@ -93,7 +93,7 @@ class FeeligoGiftbarApp {
     $js .= 'flg.auth='.json_encode($this->auth_as_json()).'}).call(this);';
     return $js;
   }
-  
+
   /**
    * Returns the json_encodable data for the Context
    *
@@ -105,7 +105,7 @@ class FeeligoGiftbarApp {
       'subject' => $this->api()->has_subject() ? $this->_user_as_json($this->api()->subject()) : null,
     );
   }
-  
+
   /**
    * Returns json_encodable Authentication data
    *
@@ -119,7 +119,7 @@ class FeeligoGiftbarApp {
       'community_api_user_token' => $auth->community_api_user_token($this->api()->viewer())->encode()
     );
   }
-  
+
   /**
    * Returns a user as JSON-encodable object
    *
