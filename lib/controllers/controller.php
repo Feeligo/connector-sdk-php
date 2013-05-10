@@ -301,7 +301,7 @@ class FeeligoController {
     }
     elseif ( ($bd = $this->param('bd')) !== null ) {
       // Quick reg exp to filter correctly formatted dates
-      if( ereg("([0-1]{1}[1-9]{1})-([0-3]{1}[1-9]{1})", $bd) ) {
+      if( ereg("([0-1]{1}[0-9]{1})-([0-3]{1}[0-9]{1})", $bd) ) {
         // Now we really test the date for trickier situations
         list($month, $day) = preg_split('/[-]/', $bd);
         // 1984 is a random leap year
