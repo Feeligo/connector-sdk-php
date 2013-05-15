@@ -5,7 +5,7 @@
  * @category   Feeligo
  * @package    API Connector SDK for PHP
  * @copyright  Copyright 2012 Feeligo
- * @license    
+ * @license
  * @author     Davide Bonapersona <tech@feeligo.com>
  */
 
@@ -13,7 +13,7 @@
  * @category   Feeligo
  * @package    FeeligoModelPresenter
  * @copyright  Copyright 2012 Feeligo
- * @license    
+ * @license
  */
 
 require_once(str_replace('//','/',dirname(__FILE__).'/').'base.php');
@@ -22,7 +22,7 @@ require_once(str_replace('//','/',dirname(__FILE__).'/').'../helpers/url.php');
 /**
  * presenter class used to present a single object
  */
- 
+
 abstract class FeeligoModelPresenter extends FeeligoBasePresenter {
 
   /**
@@ -39,7 +39,7 @@ abstract class FeeligoModelPresenter extends FeeligoBasePresenter {
       'url' => $this->url()
     ));
   }
-  
+
   /**
    * returns the URL for this model, based on its path
    */

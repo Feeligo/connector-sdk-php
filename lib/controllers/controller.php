@@ -5,7 +5,7 @@
  * @category   Feeligo
  * @package    API Connector SDK for PHP
  * @copyright  Copyright 2012 Feeligo
- * @license    
+ * @license
  * @author     Davide Bonapersona <tech@feeligo.com>
  */
 
@@ -13,7 +13,7 @@
  * @category   Feeligo
  * @package    FeeligoController
  * @copyright  Copyright 2012 Feeligo
- * @license    
+ * @license
  */
 
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../helpers/url.php');
@@ -24,38 +24,38 @@ require_once(str_replace('//','/',dirname(__FILE__).'/').'../presenters/factory.
  * Exception used to break the controller's execution and set an error message into the response
  */
 class FeeligoControllerException extends Exception {
-  
+
   public function __construct($status, $type, $msg) {
     parent::__construct("$type: $msg");
     $this->_status = $status;
     $this->_type = $type;
     $this->_message = $msg;
   }
-  
+
   public function status() { return $this->_status; }
   public function type() { return $this->_type; }
   public function message() { return $this->_message; }
 }
- 
- 
+
+
 /**
  * Single controller: determines the requested action, executes it and returns a response
- */ 
+ */
 class FeeligoController {
 
   public function __construct(FeeligoApi $api = null) {
     $this->_api = $api;
-    
+
     // URL helper
     $this->_url_helper = new FeeligoHelperUrl();
-    
+
     // response
     $this->_response = new FeeligoControllerResponse($this->request());
-    
+
     // pagination initial setting
     $this->_does_paginate = false;
   }
-  
+
   public function run () {
     try {
       $this->_run();
@@ -66,56 +66,56 @@ class FeeligoController {
     }
     return $this->response()->success();
   }
-  
+
   /**
    * Accessor for API object
    */
   public function api() {
     return $this->_api;
   }
-  
+
   /**
    * Accessor for the authentication object
    */
   public function auth() {
     return $this->api()->auth();
   }
-  
+
   /**
    * Accessor for the URL helper
    */
   public function url_helper() {
     return $this->_url_helper;
   }
-  
+
   /**
    * Accessor for the Request
    */
   public function request() {
     return $this->url_helper()->request();
   }
-  
+
   /**
    * Accessor for the URL
    */
   public function url($i = null) {
     return $this->request()->url($i);
   }
-  
+
   /**
    * Accessor for the params
    */
   public function param($name, $default_val = null) {
     return $this->request()->param($name, $default_val);
   }
-  
+
   /**
    * Accessor for the Response
    */
   public function response() {
     return $this->_response;
   }
-  
+
   /**
    * url_for helper
    */
@@ -127,15 +127,15 @@ class FeeligoController {
    * Actually performs the action
    */
   private function _run() {
-    
+
     $data = null;
     $errors = array();
-    
+
     // check instance of Feeligo_Api (useful in developement mode)
     if ($this->_api === null) {
       $this->_fail_method_not_allowed('FeeligoApi', 'FeeligoController expects an instance of FeeligoApi');
     }
-    
+
     // decode Token from URL
     $token_string = $this->param('token');
     $token = $this->auth()->decode_community_api_user_token($token_string);
@@ -162,7 +162,7 @@ class FeeligoController {
       }
       return;
     }
-    
+
     // authentication
     if ($token === null) {
       if ($token_string === null || strlen($token_string) == 0) {
@@ -171,29 +171,29 @@ class FeeligoController {
         $this->_fail_unauthorized('token', 'invalid token: '.$token_string);
       }
     }
-    
+
     // pagination
     $this->pagination_limit = (int) $this->param('lim', $this->param('limit', 100));
     $this->pagination_offset = (int) $this->param('off', $this->param('offset', 0));
-      
+
     // routing
-    
+
     if ($this->url(0) == 'info') {
       // path: info/
       $this->_require_permission($token, 'community_info');
-      
+
       $this->response()->set_data(array(
         'time' => time(),
         'phpversion' => phpversion(),
         'sdkversion' => '2.1'
       ));
-      
+
       return;
-      
+
     }elseif ($this->url(0) == 'search') {
       // path: search/  :  search
-      if (!($type = $this->param('t'))) { $this->_fail_bad_request('type', "missing"); }  
-        
+      if (!($type = $this->param('t'))) { $this->_fail_bad_request('type', "missing"); }
+
       if ($type == 'user') {
         // search among users
         $data = $this->_select_search($this->api()->users());
@@ -204,39 +204,39 @@ class FeeligoController {
     }elseif ($this->url(0) == 'users') {
       // path: users/  :  select community users
       $data = $this->api()->users();
-      
+
       if ($this->url(1) == 'search') {
         // path: users/search  :  search among users
         $data = $this->_select_search($data);
-        
+
       }else if ($this->url(1)) {
-        
-        // path: users/:id  :  select user by id  
+
+        // path: users/:id  :  select user by id
         try {
           $data = $data->find($this->url(1));
-          
+
           if ($this->url(2) == 'friends') {
             // users/:id/friends  :  select user's friends
-            
+
             // access to friends is restricted : check token
             if (false && $token->user_id().'' !== $this->url(1)) {
               $this->_fail_unauthorized('privacy', "you are not allowed to access this user's friends");
             }
-            
+
             // select user's friends
             $data = $data->friends_selector();
-            
+
             if ($this->url(3) == 'search') {
               // path: users/:id/friends/search  :  search among friends
               $data = $this->_select_search($data);
-               
+
             }else if ($this->url(3) !== null) {
               // path: users/:id/friends/:friend_id  :  select specific friend by id
               $data = $data->find($this->url(3));
-              
+
               if ($this->url(4) !== null) {
                 // path: users/:id/friend/:friend_id/:something  :  invalid path
-                $this->_fail_bad_request('path', $this->url()." is not a valid path");  
+                $this->_fail_bad_request('path', $this->url()." is not a valid path");
               }
             }else{
               // path: users/:id/friends  :  list all friends of user :id
@@ -254,16 +254,16 @@ class FeeligoController {
         // path: users/  :  list all users of the community
         $data = $this->_select_all($this->api()->users());
       }
-      
+
     }elseif ($this->url(0) == 'actions') {
       // only allow POST
       $this->_require_method('POST');
-      
+
       // $this->api()->actions() will return NULL if not implemented
       if ($this->api()->actions() === null) {
         $this->_fail_not_implemented('actions', 'actions/ is not available on this server');
       }
-      
+
       // create the action
       if (($payload = $token->payload()) !== null && is_array($payload)) {
         $data = $this->api()->actions()->create($payload);
@@ -273,37 +273,64 @@ class FeeligoController {
       }else{
         $this->_fail_bad_request('payload', 'missing');
       }
-      
+
     }else{
       $this->_fail_bad_request('path', $this->url()." is not a valid path");
     }
-    
+
     // data in JSON format
     if ($data !== null && ($presenter = FeeligoPresenterFactory::present($data)) !== null) {
       $data = $presenter->as_json();
     }
-    
+
     // add pagination information if needed
     $data = $this->_add_pagination_info(array(
       'time' => time(),
       'data' => $data
     ));
-      
+
     $this->response()->set_data($data);
   }
-  
+
   /**
    * calls the search() method on $data, passing query, type and pagination parameters
    */
-  private function _select_search($data, $query = null) {
+  private function _select_search($data) {
     // ensure there is a query, either passed or in the params
-    if ($query === null && ($query = $this->param('q')) === null) { $this->_fail_bad_request('query', "missing"); }
-    // enable pagination
-    $this->_does_paginate = true;
-    // apply search()
-    return $data->search($query, $this->pagination_limit, $this->pagination_offset);
+    if ( ($query = $this->param('q')) !== null ) {
+      // enable pagination
+      $this->_does_paginate = true;
+
+      // apply search()
+      return $data->search_by_name($query, $this->pagination_limit, $this->pagination_offset);
+    }
+    elseif ( ($bd = $this->param('bd')) !== null ) {
+      // Quick reg exp to filter correctly formatted dates
+      if( ereg("([0-1]{1}[0-9]{1})-([0-3]{1}[0-9]{1})", $bd) ) {
+        // Now we really test the date for trickier situations
+        list($month, $day) = preg_split('/[-]/', $bd);
+        // 1984 is a random leap year
+        if ( checkdate(intval($month), intval($day), 1984) ) {
+          // enable pagination
+          $this->_does_paginate = true;
+
+          // apply search()
+          return $data->search_by_birth_date($bd, $this->pagination_limit, $this->pagination_offset);
+        }
+        else {
+          $this->_fail_bad_request('bd', "this date does not exist you chancer!");
+        }
+      }
+      else {
+        $this->_fail_bad_request('bd', "badly formatted expected mm-dd");
+      }
+    }
+    else {
+      $this->_fail_bad_request('search_parameter', "missing");
+    }
+
   }
-  
+
   /**
    * calls the all() method on $data, passing pagination parameters
    */
@@ -313,8 +340,8 @@ class FeeligoController {
     // apply all()
     return $data->all($this->pagination_limit, $this->pagination_offset);
   }
-  
-  
+
+
   /**
    * add pagination information to data (if paginated)
    */
@@ -338,12 +365,12 @@ class FeeligoController {
         $params['off'] = $this->pagination_offset + $this->pagination_limit;
         if (!isset($data['paging'])) $data['paging'] = array();
         $data['paging']['next'] = $this->url_for($params);
-      } 
+      }
     }
     return $data;
   }
-  
-  
+
+
   /**
    * make sure that the token has a certain permission, or raise an error
    */
@@ -354,7 +381,7 @@ class FeeligoController {
     }
     return true;
   }
-  
+
   /**
    * make sure the request has a specific method
    */
@@ -368,7 +395,7 @@ class FeeligoController {
     }
     return true;
   }
-  
+
   /**
    * convenience methods to throw controller exceptions
    */
