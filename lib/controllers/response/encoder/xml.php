@@ -5,7 +5,7 @@
  * @category   Feeligo
  * @package    API Connector SDK for PHP
  * @copyright  Copyright 2012 Feeligo
- * @license    
+ * @license
  * @author     Davide Bonapersona <tech@feeligo.com>
  */
 
@@ -13,15 +13,15 @@
  * @category   Feeligo
  * @package    FeeligoControllerResponseEncoderXml
  * @copyright  Copyright 2012 Feeligo
- * @license    
+ * @license
  */
- 
+
 /**
  * Encodes a $data variable (string|null|array) to a XML string
  */
- 
+
 require_once(str_replace('//','/',dirname(__FILE__).'/').'../encoder.php');
- 
+
 class FeeligoControllerResponseEncoderXml implements FeeligoControllerResponseEncoder {
 
   public function content_type() {
@@ -31,7 +31,7 @@ class FeeligoControllerResponseEncoderXml implements FeeligoControllerResponseEn
   public function encode($data) {
     return '<'.'?xml version="1.0"?'.'>' . $this->_encode($data, "response");
   }
-  
+
   protected function _encode($obj, $tagname = null) {
     if (isset($obj['type'])) {
       $type = $obj['type'];
@@ -50,7 +50,7 @@ class FeeligoControllerResponseEncoderXml implements FeeligoControllerResponseEn
     }
     return $this->_tag_string($tagname, $attrs, $children);
   }
-  
+
   protected function _tag_string($name, $attrs, $children) {
     $a_str = $this->_attr_string($attrs);
     if (count($children)==0) {
@@ -58,7 +58,7 @@ class FeeligoControllerResponseEncoderXml implements FeeligoControllerResponseEn
     }
     return "<$name$a_str>".implode($children)."</$name>";
   }
-  
+
   protected function _attr_string($attrs) {
     $str = "";
     if (sizeof($attrs)>0){
