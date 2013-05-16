@@ -64,13 +64,19 @@ interface FeeligoUsersSelector {
 
 
   /**
-   * returns an array containing all the Users whose birth date matches the query
+   * returns an array containing all the Users whose birth date matches the
+   * arguments.
+   * The $year number can be null, which should return all users whose birthday
+   * is on the specified $day and $month, regardless of their birth year.
+   * Implementation can safely assume $year, $month, $day is a valid date.
    *
-   * @param string $query the search query, argument to a SQL = '(yyy)y-(m)m-(d)d' clause
+   * @param int $day the day number, from 1 to 31
+   * @param int $month the month number, from 1 = January to 12 = December
+   * @param int $year the year number (as a 4-digit integer), such as 2013
    * @param int $limit argument for the SQL LIMIT clause
    * @param int $offset argument for the SQL OFFSET clause
    * @return FeeligoUserAdapter[] array
    */
-  public function search_by_birth_date($bd, $limit = null, $offset = 0);
+  public function search_by_birth_date($day, $month, $year = null, $limit = null, $offset = 0);
 
 }
