@@ -305,25 +305,32 @@ class FeeligoController {
       return $data->search_by_name($query, $this->pagination_limit, $this->pagination_offset);
     }
     elseif ( ($bd = $this->param('bd')) !== null ) {
-      // Quick reg exp to filter correctly formatted dates
-      if( ereg("([0-1]{1}[0-9]{1})-([0-3]{1}[0-9]{1})", $bd) ) {
-        // Now we really test the date for trickier situations
-        list($month, $day) = preg_split('/[-]/', $bd);
+      // regular expression, accepts the following formats:
+      // YYYY-MM-DD
+      // MM-DD
+      $regexp = '/([0-9]{4})?-?([0-9]{2})-([0-9]{2})/';
+      // match the $bd parameter
+      $matches = array();
+      preg_match($regexp, $bd, $matches);
+      // $matches[1] (year) is optional, we need [2] (month) and [3] (day)
+      if( $matches[2] && $matches[3] ) {
+        $year = $matches[1] ? intval($matches[1]) : null;
+        $month = intval($matches[2]);
+        $day = intval($matches[3]);
+        // check the date to ensure it is valid
         // 1984 is a random leap year
-        if ( checkdate(intval($month), intval($day), 1984) ) {
+        if ( checkdate($month, $day, $year ? $year : 1984) ) {
+          // the date is valid
           // enable pagination
           $this->_does_paginate = true;
-
-          // apply search()
-          return $data->search_by_birth_date($bd, $this->pagination_limit, $this->pagination_offset);
-        }
-        else {
-          $this->_fail_bad_request('bd', "this date does not exist you chancer!");
+          // perform search
+          return $data->search_by_birth_date($day, $month, $year,
+            $this->pagination_limit, $this->pagination_offset);
         }
       }
-      else {
-        $this->_fail_bad_request('bd', "badly formatted expected mm-dd");
-      }
+      // date was badly formatted or invalid
+      $this->_fail_bad_request('bd',
+          "bad format or invalid date '$bd': expected MM-DD or YYYY-MM-DD");
     }
     else {
       $this->_fail_bad_request('search_parameter', "missing");
