@@ -18,7 +18,7 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Abstract.php 18175 2009-09-17 17:05:48Z matthew $
  */
- 
+
 require_once(str_replace('//','/',dirname(__FILE__).'/').'Exception.php');
 
 /**
