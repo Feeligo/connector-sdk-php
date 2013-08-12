@@ -167,7 +167,7 @@ class FeeligoController {
     // authentication
     if ($token === null) {
       if ($token_string === null || strlen($token_string) == 0) {
-        $this->_fail_unauthorized('token', 'missing or blank token');
+        $this->_fail_bad_request('token', 'missing or blank token');
       }else{
         $this->_fail_unauthorized('token', 'invalid token: '.$token_string);
       }
