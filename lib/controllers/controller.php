@@ -285,7 +285,7 @@ class FeeligoController {
     }
 
     // data in JSON format
-    if ($data !== null && ($presenter = FeeligoPresenterFactory::present($data)) !== null) {
+    if ($data !== null && ($presenter = FeeligoPresenterFactory::present($data, $token)) !== null) {
       $data = $presenter->as_json();
     }
 

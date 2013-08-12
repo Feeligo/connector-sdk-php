@@ -32,7 +32,7 @@ class FeeligoCollectionPresenter extends FeeligoBasePresenter {
    * @return FeeligoModelPresenter
    */
   private function present($model) {
-    return FeeligoPresenterFactory::present($model);
+    return FeeligoPresenterFactory::present($model, $this->_token);
   }
 
   /**

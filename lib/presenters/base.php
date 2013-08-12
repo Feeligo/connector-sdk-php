@@ -22,12 +22,17 @@
 
 class FeeligoBasePresenter {
 
-  public function __construct($item) {
+  public function __construct($item, $token) {
     $this->_item = $item;
+    $this->_token = $token;
   }
 
   public function item() {
     return $this->_item;
+  }
+
+  public function token() {
+    return $this->_token;
   }
 
   public function as_json() {

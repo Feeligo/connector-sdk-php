@@ -24,8 +24,9 @@ require_once(str_replace('//','/',dirname(__FILE__).'/').'model.php');
 
 class FeeligoUserPresenter extends FeeligoModelPresenter {
 
-  public function __construct($item) {
+  public function __construct($item, $token) {
     parent::__construct($item);
+    $this->_token = $token;
   }
 
   protected function path() {
@@ -33,12 +34,22 @@ class FeeligoUserPresenter extends FeeligoModelPresenter {
   }
 
   public function as_json() {
-    return array_merge(parent::as_json(), array(
-      'name' => $this->item()->name(),
-      'email' => $this->item()->email(),
-      'link' => $this->item()->link(),
-      'picture_url' => $this->item()->picture_url(),
-      'birth_date' => $this->item()->birth_date()
-    ));
+    // only show email to the owner
+    if ($this->_token->user_id() == $this->item()->id()) {
+      return array_merge(parent::as_json(), array(
+        'name' => $this->item()->name(),
+        'email' => $this->item()->email(),
+        'link' => $this->item()->link(),
+        'picture_url' => $this->item()->picture_url(),
+        'birth_date' => $this->item()->birth_date()
+      ));
+    } else {
+      return array_merge(parent::as_json(), array(
+        'name' => $this->item()->name(),
+        'link' => $this->item()->link(),
+        'picture_url' => $this->item()->picture_url(),
+        'birth_date' => $this->item()->birth_date()
+      ));
+    }
   }
 }
