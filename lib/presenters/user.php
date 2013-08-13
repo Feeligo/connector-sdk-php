@@ -24,7 +24,7 @@ require_once(str_replace('//','/',dirname(__FILE__).'/').'model.php');
 
 class FeeligoUserPresenter extends FeeligoModelPresenter {
 
-  public function __construct($item, $token) {
+  public function __construct($item, $token=null) {
     parent::__construct($item);
     $this->_token = $token;
   }
@@ -35,7 +35,7 @@ class FeeligoUserPresenter extends FeeligoModelPresenter {
 
   public function as_json() {
     // only show email to the owner
-    if ($this->_token->user_id() == $this->item()->id()) {
+    if ($this->_token != null && $this->_token->user_id() == $this->item()->id()) {
       return array_merge(parent::as_json(), array(
         'name' => $this->item()->name(),
         'email' => $this->item()->email(),
