@@ -35,6 +35,10 @@ class FeeligoBasePresenter {
     return $this->_token;
   }
 
+  public function token_user_id() {
+    return $this->_token !== null ? $this->_token->user_id() : null;
+  }
+
   public function as_json() {
     return array();
   }
