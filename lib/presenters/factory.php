@@ -32,18 +32,18 @@ require_once(str_replace('//','/',dirname(__FILE__).'/').'../../interfaces/user_
 
 class FeeligoPresenterFactory {
 
-  public static function present($item) {
+  public static function present($item, $token) {
     // null value: return a NullPresenter
     if ($item === null) return new FeeligoNullPresenter();
 
     // Models
     if (is_subclass_of($item, 'FeeligoUserAdapter') || $item instanceof FeeligoUserAdapter)
-      return new FeeligoUserPresenter($item);
+      return new FeeligoUserPresenter($item, $token);
     if (is_subclass_of($item, 'FeeligoActionAdapter') || $item instanceof FeeligoActionAdapter)
       return new FeeligoActionPresenter($item);
 
     // Collections
-    if (is_array($item)) return new FeeligoCollectionPresenter($item);
+    if (is_array($item)) return new FeeligoCollectionPresenter($item, $token);
 
     // if no match, return a NullPresenter
     return new FeeligoNullPresenter($item);

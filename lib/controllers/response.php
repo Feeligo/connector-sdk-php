@@ -24,11 +24,14 @@ class FeeligoControllerResponse {
 
   public function __construct ($request) {
     $this->_data = null;
-    $format = $request->format();
+    $this->format = $request->format();
     $callback = $request->param('callback');
-    if ($format == 'xml') {
+    if ($this->format == 'jsonp' || $this->format == 'js' || ($this->format == 'json' && $callback !== null)) {
+      $this->format = 'jsonp';
+    }
+    if ($this->format == 'xml') {
       $this->_encoder = new FeeligoControllerResponseEncoderXml();
-    }elseif($format == 'jsonp' || $format == 'js' || ($format == 'json' && $callback !== null)){
+    }elseif($this->format == 'jsonp') {
       $this->_encoder = new FeeligoControllerResponseEncoderJsonp($callback !== null ? $callback : 'callback');
     }else{
       $this->_encoder = new FeeligoControllerResponseEncoderJson();
@@ -55,7 +58,7 @@ class FeeligoControllerResponse {
   }
 
   public function error($type, $message) {
-    $this->_errors[] = array($type => $message);
+    $this->_errors = array($type => $message);
     return $this;
   }
 
@@ -69,7 +72,11 @@ class FeeligoControllerResponse {
   }
 
   public function fail($status) {
-    $this->set_data(array('errors' => $this->errors()));
+    if ($this->format == 'jsonp') {
+      $this->set_data(array('errors' => $this->errors(), '_status' => $status));
+    } else {
+      $this->set_data(array('errors' => $this->errors()));
+    }
     return $this->respond($status);
   }
 
